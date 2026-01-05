@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Diplomatic Things</title>
+    <style>
+        /* --- FONT: STRANGER THINGS (ITC Benguiat) --- */
+        @font-face {
+            font-family: 'Benguiat';
+            src: url('benguiat.ttf') format('truetype');
+            font-weight: normal;
+            font-style: normal;
+        }
+
+        /* --- VISUAL THEME: THE UPSIDE DOWN --- */
+        :root {
+            --bg-color: #0d1117;
+            --text-color: #c9d1d9;
+            --st-red-glow: #ff1a1a;
+            --st-red-dark: #8a0e1d;
+            --border-color: #30363d;
+            --input-bg: #010409;
+        }
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: 'Courier New', Courier, monospace;
+            margin: 0;
+            padding: 15px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            
+            /* Background Image with Overlay */
+            background-image: 
+                linear-gradient(rgba(13, 17, 23, 0.5), rgba(13, 17, 23, 0.6)),
+                url('background.png');
+            background-size: cover;
+            background-position: center;
+            background-attachment: fixed;
+            background-repeat: no-repeat;
+        }
+
+        /* --- TITLE SECTION (100% MIMIC) --- */
+        .title-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            margin-bottom: 20px;
+            width: 100%;
+            max-width: 600px;
+        }
+
+        /* The Badge Logo */
+        .badge-logo {
+            height: 60px;
+            width: 60px;
+            background-color: white;
+            padding: 4px;
+            border-radius: 50%;
+            border: 3px solid var(--st-red-glow);
+            box-shadow: 0 0 15px var(--st-red-glow);
+            object-fit: contain;
+            margin-bottom: 15px; /* Space between logo and text */
+        }
+
+        /* The Stranger Things Typography Stack */
+        .st-logo-stack {
+            font-family: 'Benguiat', serif;
+            text-transform: uppercase;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            position: relative;
+            /* Authentic "Hollow" Neon Look */
+            color: #000; /* Dark fill */
+            -webkit-text-stroke: 1.5px var(--st-red-glow); /* Red Outline */
+            text-shadow: 
+                0 0 5px var(--st-red-dark),
+                0 0 15px var(--st-red-glow);
+            line-height: 0.85;
+        }
+
+        /* Horizontal Glowing Bars */
+        .st-bar {
+            width: 100%;
+            height: 3px;
+            background-color: var(--st-red-glow);
+            box-shadow: 0 0 10px var(--st-red-glow), 0 0 5px var(--st-red-dark);
+            margin: 5px 0;
+            border-radius: 2px;
+        }
+
+        .st-word {
+            display: block;
+            width: 100%;
+            white-space: nowrap;
+        }
+
+        /* "DIPLOMATIC" (Longer word, smaller font to fit) */
+        .st-top {
+            font-size: 2.2rem;
+            letter-spacing: -1px;
+            margin-top: 5px;
+        }
+
+        /* "THINGS" (Shorter word, bigger font) */
+        .st-bottom {
+            font-size: 3.5rem;
+            letter-spacing: 0px;
+            margin-bottom: 5px;
+        }
+
+        /* Scaling first and last letters */
+        .big-initial {
+            font-size: 115%;
+            display: inline-block;
+            transform: translateY(2px); /* Slight adjustment for alignment */
+        }
+
+        /* Mobile Adjustment for Title */
+        @media (max-width: 400px) {
+            .st-top { font-size: 1.6rem; }
+            .st-bottom { font-size: 2.6rem; }
+        }
+
+        /* --- CONTAINER --- */
+        .container {
+            width: 100%;
+            max-width: 500px;
+            background: rgba(22, 27, 34, 0.90);
+            padding: 25px;
+            border-radius: 12px;
+            border: 1px solid var(--st-red-dark);
+            box-shadow: 0 0 25px rgba(255, 26, 26, 0.2);
+            margin-top: 10px;
+            backdrop-filter: blur(3px);
+        }
+
+        /* --- INPUTS --- */
+        label {
+            font-family: 'Benguiat', serif;
+            color: var(--st-red-glow);
+            letter-spacing: 1px;
+            font-size: 1.1rem;
+            text-shadow: 0 0 5px var(--st-red-dark);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 15px;
+            margin: 15px 0;
+            background-color: rgba(1, 4, 9, 0.8);
+            border: 1px solid var(--border-color);
+            color: #fff;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 16px;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--st-red-glow);
+            box-shadow: 0 0 15px rgba(255, 26, 26, 0.4);
+        }
+
+        /* --- BUTTONS --- */
+        button {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--st-red-dark);
+            color: rgba(255, 255, 255, 0.9);
+            border: none;
+            font-family: 'Benguiat', serif;
+            font-weight: bold;
+            font-size: 1.3rem;
+            cursor: pointer;
+            border-radius: 6px;
+            margin-top: 10px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            transition: all 0.3s;
+            border: 1px solid var(--st-red-glow);
+        }
+
+        button:hover:not(:disabled) {
+            background-color: var(--st-red-glow);
+            color: #fff;
+            box-shadow: 0 0 20px var(--st-red-glow);
+        }
+        
+        button:active { transform: scale(0.98); }
+        button:disabled { opacity: 0.7; cursor: not-allowed; }
+
+        @keyframes neon-pulse {
+            0% {
+                background-color: var(--st-red-dark);
+                box-shadow: 0 0 5px var(--st-red-dark);
+                color: rgba(255, 255, 255, 0.7);
+            }
+            50% {
+                background-color: var(--st-red-glow);
+                box-shadow: 0 0 25px var(--st-red-glow), 0 0 10px var(--st-red-glow) inset;
+                color: white;
+                text-shadow: 0 0 5px white;
+            }
+            100% {
+                background-color: var(--st-red-dark);
+                box-shadow: 0 0 5px var(--st-red-dark);
+                color: rgba(255, 255, 255, 0.7);
+            }
+        }
+
+        #loginBtn { animation: neon-pulse 2s infinite ease-in-out; }
+
+        /* --- MISSION BOX --- */
+        .mission-display {
+            background-color: rgba(255, 26, 26, 0.05);
+            border: 2px dashed var(--st-red-dark);
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+            border-radius: 8px;
+        }
+
+        .mission-header {
+            font-family: 'Benguiat', serif;
+            color: var(--st-red-glow);
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            display: block;
+            text-shadow: 0 0 5px var(--st-red-dark);
+        }
+
+        .mission-text {
+            font-size: 1.2rem;
+            line-height: 1.4;
+            font-weight: bold;
+            color: #fff;
+            min-height: 50px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .hidden { display: none; }
+        
+        .loading { 
+            color: var(--st-red-glow); 
+            font-size: 0.9rem; 
+            margin-top: 15px; 
+            text-align: center;
+            font-style: italic;
+            font-family: 'Benguiat', serif;
+        }
+        
+        .footer {
+            margin-top: 40px;
+            font-size: 0.75rem;
+            color: #e6e6e6; 
+            text-align: center;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 0.5px;
+            line-height: 1.5;
+            padding-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.8); 
+        }
+
+        .audio-hint {
+            font-size: 0.7rem;
+            color: var(--st-red-glow);
+            margin-bottom: 10px;
+            text-align: center;
+            opacity: 0.9;
+            text-shadow: 0 1px 2px black;
+        }
+        
+        #displayPlayerName {
+            color: var(--st-red-glow);
+            font-weight: bold;
+            font-family: 'Benguiat', serif;
+            text-shadow: 0 0 5px var(--st-red-dark);
+            letter-spacing: 1px;
+        }
+    </style>
+</head>
+<body>
+
+    <audio id="themeSong" loop>
+        <source src="demo.mp3" type="audio/mpeg">
+    </audio>
+
+    <div class="title-container">
+        <img src="logo.png" alt="Logo" class="badge-logo">
+        
+        <div class="st-logo-stack">
+            <div class="st-bar"></div>
+            <div class="st-word st-top">
+                <span class="big-initial">D</span>IPLOMATI<span class="big-initial">C</span>
+            </div>
+            <div class="st-word st-bottom">
+                <span class="big-initial">T</span>HING<span class="big-initial">S</span>
+            </div>
+            <div class="st-bar"></div>
+        </div>
+    </div>
+
+    <div id="loginSection" class="container">
+        <p style="text-align: center; margin-top:0; font-family: 'Benguiat', serif; color: var(--st-red-glow); font-size: 1.1rem; text-shadow: 0 2px 3px black;">
+            IDENTITY VERIFICATION
+        </p>
+        
+        <p class="audio-hint">(PLAY AT YOUR OWN RISK)</p>
+        
+        <label for="playerName">Enter Delegate Name & Country:</label>
+        <input type="text" id="playerName" placeholder="e.g. John Doe (France)" autocomplete="off">
+        
+        <button id="loginBtn" onclick="login()">Initialize Protocol</button>
+    </div>
+
+    <div id="gameSection" class="container hidden">
+        <p><strong>AGENT:</strong> <span id="displayPlayerName"></span></p>
+        
+        <div class="mission-display">
+            <span class="mission-header">CURRENT OBJECTIVE</span>
+            <div class="mission-text" id="taskText">DECRYPTING...</div>
+        </div>
+
+        <label for="targetName">Target Identification:</label>
+        <input type="text" id="targetName" placeholder="Who did you find?" autocomplete="off">
+        
+        <button onclick="submitMission()" id="submitBtn">Upload Intel</button>
+        <div id="statusMsg" class="loading hidden">Transmitting data securely...</div>
+    </div>
+
+    <div class="footer">
+        ✨✍️ Created by Panagiotis Domvros, President of PyleaMUN, All Rights Reserved ✍️✨
+    </div>
+
+    <script>
+        // --- CONFIGURATION ---
+        const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_kxq6m9FKPXxfaYVhzYM5jugBHfCuX0YQhR4PzC9EJtdJNWqXfNfT5Ja9YFfaGcQ/exec';
+        
+        // --- AUDIO HANDLING ---
+        const audio = document.getElementById("themeSong");
+        let audioStarted = false;
+
+        document.body.addEventListener('click', () => {
+            if (!audioStarted && !document.getElementById('loginSection').classList.contains('hidden')) {
+                audio.play().catch(e => console.log("Audio waiting for interaction"));
+                audioStarted = true;
+            }
+        }, { once: true });
+
+        document.body.addEventListener('touchstart', () => {
+            if (!audioStarted && !document.getElementById('loginSection').classList.contains('hidden')) {
+                audio.play().catch(e => console.log("Audio waiting for interaction"));
+                audioStarted = true;
+            }
+        }, { once: true });
+
+        // --- STATE ---
+        let currentPlayer = "";
+        let currentTask = "";
+
+        // --- TASK BANK (UPDATED) ---
+        const tasks = [
+            "Find a delegate from the Security Council.",
+            "Find a delegate from ECOSOC.",
+            "Find a delegate from UNEP.",
+            "Find a delegate from the Congress of Corinth.",
+            "Find a delegate from WHO.",
+            "Find a delegate from DISEC.",
+            "Find a delegate from the Human Rights Council.",
+            "Find a delegate representing a P5 Nation (China, France, Russia, UK, USA).",
+            "Find a delegate representing a G20 Nation.",
+            "Find a delegate representing an EU member state.",
+            "Find a delegate representing an African Union member.",
+            "Find a delegate representing an ASEAN member.",
+            "Find a delegate representing a Nordic country.",
+            "Find a delegate representing a South American country.",
+            "Find a delegate representing an Island Nation.",
+            "Find a delegate whose country relies on Ecotourism.",
+            "Find a delegate whose country is a major Arms Exporter.",
+            "Find a delegate whose country advocates for Green Economy.",
+            "Find a delegate whose country has a Youth Parliament.",
+            "Find a delegate whose country has hosted the Olympics.",
+            "Find a delegate whose country is famous for renewable energy.",
+            "Find a delegate whose country borders the Mediterranean.",
+            "Find a delegate whose country is under UN sanctions.",
+            "Find a delegate whose country has a population under 5 million.",
+            "Find a delegate whose country has a population over 100 million.",
+            "Find a delegate who can name the capital city of their assigned country.",
+            "Find a delegate who knows their country's GDP (roughly).",
+            "Find a delegate who can name their country's Head of State.",
+            "Find a delegate who opposes Nuclear Proliferation.",
+            "Find a delegate who supports Veto Reform.",
+            "Find a Chair or Co-Chair from a committee other than yours.",
+            "Find a member of the Secretariat (excluding the President of PyleaMUN).",
+            "Find a delegate attending PyleaMUN for the first time.",
+            "Find a delegate who has attended more than 5 MUNs.",
+            "Find a delegate who has won a Best Delegate award before.",
+            "Find a delegate who is a Student Ambassador.",
+            "Find a delegate who traveled from outside Thessaloniki.",
+            "Find a delegate who is in the same school grade as you.",
+            "Find a delegate who is younger than you.",
+            "Find a delegate who is older than you.",
+            "Shake hands with a delegate from the Security Council.",
+            "Ask a delegate from UNEP for one fact about their topic.",
+            "Ask a delegate from ECOSOC what their 'money stance' is.",
+            "Find a delegate and ask them their opening speech hook.",
+            "Find a delegate and trade a policy idea with them.",
+            "Find a delegate and form a temporary 'Alliance' for 1 minute.",
+            "Find a delegate and ask which SDG is their favorite.",
+            "Find a delegate and define 'Sovereignty' together.",
+            "Find a delegate and explain 'Right of Reply' to them.",
+            "Find a delegate and ask them their stance on AI.",
+            "Find a delegate representing a country starting with 'A'.",
+            "Find a delegate representing a country starting with 'B'.",
+            "Find a delegate representing a country starting with 'C'.",
+            "Find a delegate representing a country starting with 'I'.",
+            "Find a delegate representing a country starting with 'M'.",
+            "Find a delegate representing a country starting with 'S'.",
+            "Find a delegate representing a country containing 'Z'.",
+            "Find a delegate representing a country with Red in its flag.",
+            "Find a delegate representing a country with Green in its flag.",
+            "Find a delegate representing a country with Blue in its flag.",
+            "Find a delegate representing a country with a Star in its flag.",
+            "Find a delegate representing a country in the Southern Hemisphere.",
+            "Find a delegate representing a Landlocked Country.",
+            "Find a delegate representing a country that uses the Euro.",
+            "Find a delegate representing a country that uses the Dollar.",
+            "Find a delegate representing a country where French is spoken.",
+            "Find a delegate representing a country where Spanish is spoken.",
+            "Find a delegate representing a country where Arabic is spoken.",
+            "Find a delegate representing a country that is a Monarchy.",
+            "Find a delegate representing a country that is a Federal Republic.",
+            "Find a delegate wearing a red tie.",
+            "Find a delegate wearing a blue tie.",
+            "Find a delegate wearing glasses.",
+            "Find a delegate wearing pearls or a necklace.",
+            "Find a delegate wearing sneakers with their suit.",
+            "Find a delegate wearing a lapel pin.",
+            "Find a delegate with a pocket square.",
+            "Find a delegate who is taller than you.",
+            "Find a delegate who has curly hair.",
+            "Find a delegate wearing a watch.",
+            "High-five a delegate from the Historical Committee.",
+            "Take a selfie with a delegate from a different committee.",
+            "Find a delegate and play Rock-Paper-Scissors (Best of 1).",
+            "Find a delegate and ask them: 'Coffee or Tea?'",
+            "Find a delegate and ask them: 'Cats or Dogs?'",
+            "Find a delegate and ask for their best MUN pickup line.",
+            "Find a delegate and ask them to show you their 'placard face'.",
+            "Find a delegate and swap nametags for 10 seconds.",
+            "Find a delegate and do a formal bow to each other.",
+            "Find a delegate and guess their zodiac sign.",
+            "Find a delegate who is already drinking coffee.",
+            "Find a delegate who looks stressed and tell them 'You got this!'",
+            "Find a delegate who is carrying a printed resolution.",
+            "Find a delegate who is checking their phone.",
+            "Find a delegate who forgot to bring a pen.",
+            "Find a delegate who can say 'Point of Personal Privilege' really fast.",
+            "Find a delegate who loves Crisis committees more than GA.",
+            "Find a delegate who has been to Geneva or NY.",
+            "Find a delegate who is planning to Motion for a Break immediately.",
+            "Find a delegate and tell them they look 'Present and Voting'.",
+            // PRESIDENTIAL TASKS (UPDATED)
+            "Find the President of PyleaMUN and ask what 'Empowering Tomorrow' means to them.",
+            "Ask the President of PyleaMUN which committee topic is most critical.",
+            "Ask the President of PyleaMUN what they hope delegates take away from PyleaMUN.",
+            "Ask the President of PyleaMUN how long it took to organize this conference.",
+            "Ask the President of PyleaMUN for their #1 tip on public speaking.",
+            "Ask the President of PyleaMUN if they would Veto pineapple on pizza.",
+            "Tell the President of PyleaMUN: 'Don't worry, everything is going perfectly.'",
+            "Ask the President of PyleaMUN to describe their dream Gavel.",
+            "Take a 'serious diplomat' selfie with the President of PyleaMUN.",
+            "Ask the President of PyleaMUN how many coffees they have had today.",
+            // ADVISOR TASKS
+            "Find an Advisor and ask how many MUNs they have attended.",
+            "Find an Advisor from a different school and ask about their delegation.",
+            "Ask an Advisor what they look for in a 'Best Delegate'.",
+            "Ask an Advisor if MUN was different in the past.",
+            "Welcome an Advisor from a visiting school to Pylea.",
+            "Ask an Advisor if they wish they were debating right now.",
+            "Find an Advisor and compliment their outfit.",
+            "Ask an Advisor which student is likely to cause 'diplomatic chaos'.",
+            "Ask an Advisor where to find the best snacks.",
+            "Ask an Advisor to rate the stress level in the room (1-10).",
+            // THE SILLY SELFIE CHALLENGE (ADDED 10 TIMES FOR PROBABILITY)
+            "Take a silly selfie with the President of PyleaMUN.",
+            "Take a silly selfie with the President of PyleaMUN.",
+            "Take a silly selfie with the President of PyleaMUN.",
+            "Take a silly selfie with the President of PyleaMUN.",
+            "Take a silly selfie with the President of PyleaMUN.",
+            "Take a silly selfie with the President of PyleaMUN.",
+            "Take a silly selfie with the President of PyleaMUN.",
+            "Take a silly selfie with the President of PyleaMUN.",
+            "Take a silly selfie with the President of PyleaMUN.",
+            "Take a silly selfie with the President of PyleaMUN."
+        ];
+
+        // --- FUNCTIONS ---
+
+        function login() {
+            const nameInput = document.getElementById('playerName');
+            if (nameInput.value.trim() === "") {
+                alert("Please identify yourself!");
+                return;
+            }
+            currentPlayer = nameInput.value.trim();
+            audio.pause();
+            audio.currentTime = 0; 
+            
+            document.getElementById('displayPlayerName').innerText = currentPlayer;
+            document.getElementById('loginSection').classList.add('hidden');
+            document.getElementById('gameSection').classList.remove('hidden');
+            
+            generateNewTask();
+        }
+
+        function generateNewTask() {
+            const randomIndex = Math.floor(Math.random() * tasks.length);
+            currentTask = tasks[randomIndex];
+            document.getElementById('taskText').innerText = currentTask;
+            document.getElementById('targetName').value = "";
+        }
+
+        function submitMission() {
+            const targetInput = document.getElementById('targetName');
+            const target = targetInput.value.trim();
+            const btn = document.getElementById('submitBtn');
+            const status = document.getElementById('statusMsg');
+
+            if (target === "") {
+                alert("You must enter the name/country of the person you found!");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerText = "TRANSMITTING...";
+            status.classList.remove('hidden');
+
+            const formData = new FormData();
+            formData.append('player', currentPlayer);
+            formData.append('task', currentTask);
+            formData.append('target', target);
+
+            fetch(SCRIPT_URL, {
+                method: 'POST',
+                mode: 'no-cors',
+                body: formData
+            })
+            .then(response => {
+                alert("✅ INTELLIGENCE CONFIRMED. GOOD WORK.");
+                generateNewTask();
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert("⚠️ Weak Signal. Data transmission attempted.");
+                generateNewTask();
+            })
+            .finally(() => {
+                btn.disabled = false;
+                btn.innerText = "UPLOAD INTEL";
+                status.classList.add('hidden');
+            });
+        }
+    </script>
+</body>
+</html>
