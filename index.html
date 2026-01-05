@@ -144,6 +144,29 @@
             backdrop-filter: blur(3px);
         }
 
+        /* --- PRIZE ALERT BOX --- */
+        .prize-alert {
+            background-color: rgba(255, 26, 26, 0.1);
+            border: 1px solid var(--st-red-glow);
+            color: white;
+            padding: 10px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            text-align: center;
+            font-size: 0.9rem;
+            line-height: 1.4;
+            box-shadow: 0 0 10px rgba(255, 26, 26, 0.2) inset;
+        }
+
+        .prize-header {
+            color: var(--st-red-glow);
+            font-family: 'Benguiat', serif;
+            font-weight: bold;
+            display: block;
+            margin-bottom: 5px;
+            text-shadow: 0 0 3px var(--st-red-dark);
+        }
+
         /* --- INPUTS --- */
         label {
             font-family: 'Benguiat', serif;
@@ -317,8 +340,13 @@
         <p style="text-align: center; margin-top:0; font-family: 'Benguiat', serif; color: var(--st-red-glow); font-size: 1.1rem; text-shadow: 0 2px 3px black;">
             IDENTITY VERIFICATION
         </p>
+
+        <div class="prize-alert">
+            <span class="prize-header">⚠️ PRIORITY MESSAGE</span>
+            The agent who gathers the most intel will receive a classified Prize Award from the <strong>President of PyleaMUN</strong>.
+        </div>
         
-        <p class="audio-hint">(Tap anywhere to engage audio uplink)</p>
+        <p class="audio-hint">(PLAY AT YOUR OWN RISK)</p>
         
         <label for="playerName">Enter Delegate Name & Country:</label>
         <input type="text" id="playerName" placeholder="e.g. John Doe (France)" autocomplete="off">
