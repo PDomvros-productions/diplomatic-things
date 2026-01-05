@@ -38,7 +38,7 @@
             align-items: center;
             min-height: 100vh;
             
-            /* Background Image with Overlay */
+            /* Background Image with Overlay (50-60% Opacity) */
             background-image: 
                 linear-gradient(rgba(13, 17, 23, 0.5), rgba(13, 17, 23, 0.6)),
                 url('background.png');
@@ -48,7 +48,7 @@
             background-repeat: no-repeat;
         }
 
-        /* --- TITLE SECTION (100% MIMIC) --- */
+        /* --- TITLE SECTION --- */
         .title-container {
             display: flex;
             flex-direction: column;
@@ -68,7 +68,7 @@
             border: 3px solid var(--st-red-glow);
             box-shadow: 0 0 15px var(--st-red-glow);
             object-fit: contain;
-            margin-bottom: 15px; /* Space between logo and text */
+            margin-bottom: 15px;
         }
 
         /* The Stranger Things Typography Stack */
@@ -81,8 +81,8 @@
             align-items: center;
             position: relative;
             /* Authentic "Hollow" Neon Look */
-            color: #000; /* Dark fill */
-            -webkit-text-stroke: 1.5px var(--st-red-glow); /* Red Outline */
+            color: #000; 
+            -webkit-text-stroke: 1.5px var(--st-red-glow);
             text-shadow: 
                 0 0 5px var(--st-red-dark),
                 0 0 15px var(--st-red-glow);
@@ -105,28 +105,27 @@
             white-space: nowrap;
         }
 
-        /* "DIPLOMATIC" (Longer word, smaller font to fit) */
+        /* "DIPLOMATIC" */
         .st-top {
             font-size: 2.2rem;
             letter-spacing: -1px;
             margin-top: 5px;
         }
 
-        /* "THINGS" (Shorter word, bigger font) */
+        /* "THINGS" */
         .st-bottom {
             font-size: 3.5rem;
             letter-spacing: 0px;
             margin-bottom: 5px;
         }
 
-        /* Scaling first and last letters */
+        /* Scaling letters */
         .big-initial {
             font-size: 115%;
             display: inline-block;
-            transform: translateY(2px); /* Slight adjustment for alignment */
+            transform: translateY(2px);
         }
 
-        /* Mobile Adjustment for Title */
         @media (max-width: 400px) {
             .st-top { font-size: 1.6rem; }
             .st-bottom { font-size: 2.6rem; }
@@ -162,7 +161,7 @@
             border: 1px solid var(--border-color);
             color: #fff;
             font-family: 'Courier New', Courier, monospace;
-            font-size: 16px;
+            font-size: 16px; /* Prevents zoom on iOS */
             border-radius: 6px;
             transition: all 0.3s;
         }
@@ -319,7 +318,7 @@
             IDENTITY VERIFICATION
         </p>
         
-        <p class="audio-hint">(PLAY AT YOUR OWN RISK)</p>
+        <p class="audio-hint">(Tap anywhere to engage audio uplink)</p>
         
         <label for="playerName">Enter Delegate Name & Country:</label>
         <input type="text" id="playerName" placeholder="e.g. John Doe (France)" autocomplete="off">
@@ -350,23 +349,43 @@
         // --- CONFIGURATION ---
         const SCRIPT_URL = 'https://script.google.com/macros/s/AKfycby_kxq6m9FKPXxfaYVhzYM5jugBHfCuX0YQhR4PzC9EJtdJNWqXfNfT5Ja9YFfaGcQ/exec';
         
-        // --- AUDIO HANDLING ---
+        // --- ROBUST AUDIO HANDLING FOR MOBILE ---
         const audio = document.getElementById("themeSong");
         let audioStarted = false;
 
-        document.body.addEventListener('click', () => {
-            if (!audioStarted && !document.getElementById('loginSection').classList.contains('hidden')) {
-                audio.play().catch(e => console.log("Audio waiting for interaction"));
-                audioStarted = true;
-            }
-        }, { once: true });
+        const tryPlayAudio = () => {
+            if (audioStarted) return;
+            // Only try if still on login screen
+            if (document.getElementById('loginSection').classList.contains('hidden')) return;
 
-        document.body.addEventListener('touchstart', () => {
-            if (!audioStarted && !document.getElementById('loginSection').classList.contains('hidden')) {
-                audio.play().catch(e => console.log("Audio waiting for interaction"));
+            audio.play().then(() => {
+                console.log("Audio engaged.");
                 audioStarted = true;
-            }
-        }, { once: true });
+                removeAudioListeners();
+            }).catch(e => {
+                console.log("Audio waiting for user gesture...");
+            });
+        };
+
+        const addAudioListeners = () => {
+            document.body.addEventListener('click', tryPlayAudio);
+            document.body.addEventListener('touchstart', tryPlayAudio);
+            document.body.addEventListener('touchend', tryPlayAudio);
+            document.body.addEventListener('keydown', tryPlayAudio);
+            // Specifically target the input field for strongest trigger
+            const inputField = document.getElementById('playerName');
+            if(inputField) inputField.addEventListener('focus', tryPlayAudio);
+        };
+
+        const removeAudioListeners = () => {
+            document.body.removeEventListener('click', tryPlayAudio);
+            document.body.removeEventListener('touchstart', tryPlayAudio);
+            document.body.removeEventListener('touchend', tryPlayAudio);
+            document.body.removeEventListener('keydown', tryPlayAudio);
+        };
+
+        // Initialize listeners immediately
+        addAudioListeners();
 
         // --- STATE ---
         let currentPlayer = "";
@@ -496,7 +515,7 @@
             "Ask an Advisor which student is likely to cause 'diplomatic chaos'.",
             "Ask an Advisor where to find the best snacks.",
             "Ask an Advisor to rate the stress level in the room (1-10).",
-            // THE SILLY SELFIE CHALLENGE (ADDED 10 TIMES FOR PROBABILITY)
+            // THE SILLY SELFIE CHALLENGE (ADDED 10 TIMES)
             "Take a silly selfie with the President of PyleaMUN.",
             "Take a silly selfie with the President of PyleaMUN.",
             "Take a silly selfie with the President of PyleaMUN.",
@@ -518,6 +537,8 @@
                 return;
             }
             currentPlayer = nameInput.value.trim();
+            
+            // Stop audio when entering the game
             audio.pause();
             audio.currentTime = 0; 
             
